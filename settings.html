@@ -1,0 +1,1740 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Settings — SuperProfile (enhanced)</title>
+  <meta name="description" content="Enhanced settings mockup (Store / SEO / Analytics)">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #eef3f2;
+      --panel: #ffffff;
+      --muted: #6f7e7c;
+      --accent: #1f61ec;
+      --card-radius: 12px;
+      --shadow-sm: 0 6px 18px rgba(18, 22, 26, 0.06);
+      --border: rgba(0, 0, 0, 0.06);
+      --overlay: rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #122227
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 18px auto;
+      padding: 0 20px 60px
+    }
+
+    /* Simple topbar */
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.02)
+    }
+
+    .topbar-inner {
+      width: 100%;
+      max-width: 1320px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 12px
+    }
+
+    .tabs {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex: 1
+    }
+
+    .tab {
+      padding: 10px 8px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    .tab.active {
+      border-bottom: 3px solid rgba(31, 97, 236, 0.14);
+      color: #122227
+    }
+
+    /* page layout */
+    .page {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      align-items: start
+    }
+
+    @media (max-width:1100px) {
+      .page {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: var(--card-radius);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border)
+    }
+
+    .card+.card {
+      margin-top: 12px
+    }
+
+    h3.card-title {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+      font-weight: 800
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .muted-sm {
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    /* Certificates list */
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .cert-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-radius: 10px;
+      background: #fbfbfb;
+      border: 1px solid rgba(0, 0, 0, 0.03)
+    }
+
+    .cert-left {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .cert-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9fb8b6;
+      font-weight: 700
+    }
+
+    .cert-meta {
+      display: flex;
+      flex-direction: column
+    }
+
+    .cert-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 700
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, var(--accent), #2358e6);
+      color: #fff;
+      border: none
+    }
+
+    .btn.small {
+      padding: 6px 8px;
+      font-size: 13px;
+      border-radius: 8px
+    }
+
+    /* modal overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px
+    }
+
+    .overlay.show {
+      display: flex
+    }
+
+    /* modal window */
+    .modal {
+      background: var(--panel);
+      width: 640px;
+      max-width: calc(100% - 40px);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      position: relative;
+      max-height: 92vh;
+      overflow: auto
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px
+    }
+
+    .modal-title {
+      font-weight: 800;
+      font-size: 16px
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px
+    }
+
+    .close-btn:focus {
+      outline: 3px solid rgba(31, 97, 236, 0.18)
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    input[type="text"],
+    select,
+    input[type="url"],
+    input[type="file"],
+    textarea {
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      font-size: 14px
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px
+    }
+
+    /* uploader box */
+    .uploader {
+      border: 2px dashed rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      background: #fbfbfb
+    }
+
+    .uploader.dragover {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, #f7fbff, #fbfdff)
+    }
+
+    .uploader .hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px
+    }
+
+    .uploader .file-preview {
+      margin-top: 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center
+    }
+
+    .file-preview img {
+      max-width: 120px;
+      max-height: 90px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.04)
+    }
+
+    .file-preview .meta {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      margin-top: 12px
+    }
+
+    .modal .actions {
+      display: flex;
+      gap: 8px
+    }
+
+    .error {
+      color: #d64545;
+      font-size: 13px;
+      margin-top: 6px
+    }
+
+    @media (max-width:700px) {
+      .modal {
+        width: 100%
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* -------------------------
+       Base
+       ------------------------- */
+    :root {
+      --bg: #eef3f2;
+      --panel: #ffffff;
+      --muted: #6f7e7c;
+      --accent: #1f61ec;
+      --accent-600: #2358e6;
+      --soft: #f6f8f8;
+      --card-radius: 12px;
+      --shadow-lg: 0 14px 40px rgba(18, 22, 26, 0.08);
+      --shadow-sm: 0 6px 18px rgba(18, 22, 26, 0.06);
+      --border: rgba(0, 0, 0, 0.06);
+      --danger: #d64545;
+      --success: #2b9e5f;
+      --focus: rgba(31, 97, 236, 0.18);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #122227;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.35;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 18px auto;
+      padding: 0 20px 60px;
+    }
+
+    /* -------------------------
+       Top Navigation
+       ------------------------- */
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+      border-radius: 10px;
+      margin: 6px 0 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .topbar-inner {
+      width: 100%;
+      max-width: 1320px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 12px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex: 1
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .tab:hover {
+      color: #122227;
+      background: #fff;
+      box-shadow: var(--shadow-sm)
+    }
+
+    .tab.active {
+      color: #122227;
+      border-bottom: 3px solid rgba(31, 97, 236, 0.14);
+      padding-bottom: 8px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .profile-url {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel);
+      padding: 8px 12px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-sm);
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* -------------------------
+       Page layout
+       ------------------------- */
+    .page {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width:1100px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* -------------------------
+       Cards
+       ------------------------- */
+    .card {
+      background: var(--panel);
+      border-radius: var(--card-radius);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .card+.card {
+      margin-top: 12px;
+    }
+
+    h3.card-title {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.2
+    }
+
+    /* tiny helpers */
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .muted-sm {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* inputs */
+    input[type="text"],
+    textarea,
+    select,
+    input[type="url"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: box-shadow .12s ease, border-color .12s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      box-shadow: 0 6px 18px var(--focus);
+      border-color: var(--accent-600);
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    /* small inline controls */
+    .inline-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, var(--accent), var(--accent-600));
+      color: #fff;
+      border: none;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .btn:focus {
+      outline: 3px solid var(--focus);
+    }
+
+    .small-btn {
+      padding: 6px 8px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    /* store details */
+    .store-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .store-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .store-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fbfbfb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .color-swatch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 6px 18px rgba(31, 97, 236, 0.04);
+    }
+
+    .color-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .edit-inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .edit-inline input[type="text"] {
+      max-width: 260px;
+    }
+
+    .control-note {
+      font-size: 13px;
+      color: #7d8f8d;
+    }
+
+    /* meta preview */
+    .meta-area {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .meta-preview {
+      width: 120px;
+      height: 92px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #355b9a;
+      font-weight: 700;
+      background: linear-gradient(180deg, #e8f0ff, #dbeeff);
+      box-shadow: 0 8px 18px rgba(31, 97, 236, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.03)
+    }
+
+    /* switch control */
+    .switch {
+      --w: 46px;
+      --h: 28px;
+      width: var(--w);
+      height: var(--h);
+      border-radius: 999px;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      background: #eef2f1;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+
+    .switch .knob {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 6px 16px rgba(18, 22, 26, 0.08);
+      transform: translateX(0);
+      transition: transform .18s ease;
+    }
+
+    .switch[aria-pressed="true"] {
+      background: linear-gradient(90deg, var(--accent), var(--accent-600));
+    }
+
+    .switch[aria-pressed="true"] .knob {
+      transform: translateX(18px);
+    }
+
+    /* list rows */
+    .list-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .list-row {
+      background: #fbfbfb;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .list-row .left {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar-sm {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      color: #9fb8b6;
+      font-weight: 700;
+    }
+
+    /* preview card (right column) */
+    .preview {
+      position: sticky;
+      top: 90px;
+    }
+
+    .preview-card {
+      padding: 18px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #eef6ff, #f5fbff);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .preview .avatar-lg {
+      width: 68px;
+      height: 68px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      font-weight: 800;
+      color: #355b9a;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      box-shadow: 0 8px 18px rgba(31, 97, 236, 0.04)
+    }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #0f1720;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 1000;
+      font-weight: 600;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* utility */
+    .muted-right {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .tooltip {
+      position: relative;
+    }
+
+    .tooltip:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      top: -36px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      z-index: 50;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:720px) {
+      .meta-area {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .store-row {
+        flex-direction: column;
+      }
+
+      .preview {
+        position: relative;
+        top: 0;
+        order: 3;
+      }
+
+      .topbar {
+        height: auto;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Top navigation -->
+    <header class="topbar" role="banner">
+      <div class="topbar-inner">
+        <nav class="tabs" aria-label="Top navigation">
+          <a class="tab" href="#" role="link">Store</a>
+          <a class="tab" href="#" role="link">Appearance</a>
+          <a class="tab" href="#" role="link">Analytics</a>
+          <a class="tab active" href="#" role="link" aria-current="page">Settings</a>
+        </nav>
+
+        <div class="top-actions" aria-hidden>
+          <div class="profile-url" id="profileUrl" title="Profile link">
+            <span style="font-weight:700">superprofile.bio/</span><span id="profileHandle">khushii28132004</span>
+          </div>
+          <button class="copy-btn" id="copyBtn" aria-label="Copy profile URL">Copy</button>
+          <button class="btn" id="shareBtn">Share</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page -->
+    <main class="page" role="main">
+
+      <!-- Main column -->
+      <section>
+
+        <!-- Store Details -->
+        <div class="card" aria-labelledby="storeTitle">
+          <h3 class="card-title" id="storeTitle">Store Details <span class="muted"
+              style="font-weight:500;font-size:13px">ⓘ</span></h3>
+
+          <div class="store-row">
+            <div class="store-group">
+              <div class="stack">
+                <label class="muted">Your store's official link</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <div class="store-link" id="storeLinkDisplay">
+                    <div class="muted-sm">superprofile.bio/</div>
+                    <div style="font-weight:800" id="storeHandleDisplay">khushii28132004</div>
+                  </div>
+
+                  <div class="edit-inline" aria-hidden>
+                    <button class="btn small-btn" id="editHandleBtn">Edit</button>
+                  </div>
+                </div>
+
+                <!-- inline editor (hidden by default) -->
+                <div id="handleEditor" style="display:none;margin-top:6px;align-items:center;gap:8px">
+                  <input type="text" id="handleInput" aria-label="Edit store handle" value="khushii28132004" />
+                  <button class="btn primary small-btn" id="saveHandleBtn">Save</button>
+                  <button class="btn small-btn" id="cancelHandleBtn">Cancel</button>
+                  <div class="muted-sm" id="handleHint">Only letters, numbers, hyphens and underscores. 3–30 chars.
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack" style="margin-top:8px">
+                <div class="muted">Brand color</div>
+                <div class="color-row">
+                  <div class="color-swatch" id="colorSwatch" title="#6CA3F6" style="background:#6CA3F6"></div>
+                  <div style="display:flex;flex-direction:column">
+                    <div style="display:flex;gap:8px;align-items:center">
+                      <input type="color" id="colorPicker" value="#6CA3F6"
+                        style="width:44px;height:40px;padding:0;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer" />
+                      <input type="text" id="colorHex" value="#6CA3F6" style="width:110px" />
+                      <button class="btn small-btn" id="applyColor">Apply</button>
+                      <button class="btn small-btn" id="resetColor">Reset</button>
+                    </div>
+                    <div class="muted-sm">This color is used to style parts of your store preview.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- right preview -->
+            <aside class="preview" aria-label="preview">
+              <div class="preview-card card" id="previewCard" aria-hidden>
+                <div class="avatar-lg" id="previewAvatar">KS</div>
+                <div style="font-weight:800" id="previewName">Khushi Shukla</div>
+                <div class="muted-sm" id="previewSub">Your customer dashboard is customised as per your brand color
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button class="btn ghost">Discover</button>
+                  <button class="btn primary">Purchases</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- SEO -->
+        <div class="card" aria-labelledby="seoTitle">
+          <h3 class="card-title" id="seoTitle">SEO — Custom Meta</h3>
+
+          <div class="meta-area">
+            <div class="meta-preview" aria-hidden>
+              <div
+                style="width:46px;height:46px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#355b9a;font-weight:800">
+                KS</div>
+              <div id="metaPreviewTitle" style="font-size:13px;margin-top:8px">Khushi Shukla</div>
+              <div style="font-size:12px;color:#5c7b9b;margin-top:6px" id="metaPreviewUrl">
+                superprofile.bio/khushii28132004</div>
+            </div>
+
+            <div class="meta-inputs" style="flex:1">
+              <div class="stack">
+                <label class="muted">Meta Title</label>
+                <input id="metaTitle" type="text" placeholder="Meta title" value="Khushi Shukla" />
+              </div>
+
+              <div class="stack">
+                <label class="muted">Meta Description</label>
+                <textarea id="metaDescription"
+                  placeholder="Write a short description...">Welcome to my SuperProfile!🚀</textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div class="muted-sm">Note: Changes to meta may take some time to appear on other platforms.</div>
+                  <div style="display:flex;gap:8px">
+                    <button class="btn" id="seoReset">Reset</button>
+                    <button class="btn primary" id="seoSave">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop view -->
+        <div class="card">
+          <h3 class="card-title">Desktop View</h3>
+
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <div class="muted">Column layout</div>
+              <div style="margin-top:8px">
+                <select id="layoutSelect" aria-label="Column layout">
+                  <option>Single column</option>
+                  <option>Two columns</option>
+                </select>
+              </div>
+            </div>
+            <div class="muted-sm">Preview will update instantly</div>
+          </div>
+        </div>
+
+        <!-- Sensitive Content -->
+        <div class="card">
+          <h3 class="card-title">Sensitive Content Warning</h3>
+
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="muted">Show content warning before your store opens</div>
+              <div class="muted-sm">This displays a warning page to users before they enter your store.</div>
+            </div>
+
+            <div>
+              <button id="sensitiveToggle" class="switch" role="switch" aria-pressed="false"
+                aria-label="Toggle sensitive content">
+                <div class="knob"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Integration -->
+        <div class="card">
+          <h3 class="card-title">Analytics integration</h3>
+
+          <div class="stack">
+            <div>
+              <div class="muted">Facebook Tracking</div>
+              <input id="fbPixel" type="text" placeholder="Pixel ID" />
+            </div>
+
+            <div>
+              <input id="fbToken" type="text" placeholder="Pixel Conversions API Access Token" />
+            </div>
+
+            <div>
+              <div class="muted">Google Tracking</div>
+              <input id="gaId" type="text" placeholder="Google Analytics ID (G-XXXXXXXX)" />
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:8px">
+              <button class="btn" id="analyticsReset">Reset</button>
+              <button class="btn primary" id="analyticsSave">Save</button>
+            </div>
+
+            <div class="muted-sm">Know more about setting up tracking on your store. <a href="#"
+                style="color:var(--accent);text-decoration:none">Learn here</a></div>
+          </div>
+        </div>
+
+        <!-- Certificates & Licenses -->
+         <div class="card" id="certCard">
+          <h3 class="card-title">Certificates & Licenses</h3>
+          <p class="muted-sm">Showcasing your official certificates/licenses builds trust in your customers and leads to higher sales.</p>
+
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <button class="btn primary" id="openAddBtn">+ Add New</button>
+            <div class="muted-sm">Accepted: JPEG, PNG, PDF — max 50 MB</div>
+          </div>
+
+          <div class="cert-list" id="certList" aria-live="polite" style="margin-top:14px">
+            <!-- existing certificates will render here -->
+            <!-- example placeholder -->
+            <!-- <div class="cert-row">
+              <div class="cert-left">
+                <div class="cert-icon">PDF</div>
+                <div class="cert-meta"><strong>ISO 9001</strong><span class="muted-sm">Issued by Acme — Jun 2021</span></div>
+              </div>
+              <div class="cert-actions"><button class="btn small">View</button><button class="btn small">Remove</button></div>
+            </div> -->
+          </div>
+        </div>
+
+        <!-- Hide referral -->
+        <div class="card">
+          <h3 class="card-title">Hide SuperProfile Referral Link</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div>
+              <div class="muted">Footer position</div>
+              <select id="footerSelect" style="margin-top:8px">
+                <option>Sticks on scroll</option>
+                <option>Hidden</option>
+              </select>
+            </div>
+
+            <div style="text-align:right">
+              <div class="muted-sm" style="margin-bottom:8px">This is a paid feature — upgrade to Pro to hide the
+                referral link.</div>
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn ghost">Upgrade</button>
+                <div class="muted-sm"
+                  style="padding:6px 10px;border-radius:999px;background:#fff;border:1px solid rgba(0,0,0,0.03)">PRO
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+       <aside>
+        <div class="card">
+          <h3 class="card-title">Preview</h3>
+          <div class="muted-sm">Right-side preview area (omitted heavy details)</div>
+        </div>
+      </aside>
+
+    </main>
+  </div>
+
+  <!-- Modal overlay -->
+  <div class="overlay" id="modalOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">New certificate/license</div>
+        <button class="close-btn" id="modalClose" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="certForm" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="certTitle">Certificate title <span class="muted" aria-hidden>*</span></label>
+            <input id="certTitle" name="certTitle" type="text" required autocomplete="off" />
+            <div class="error" id="errTitle" style="display:none">Please provide a title.</div>
+          </div>
+
+          <div class="field">
+            <label for="issuingOrg">Issuing organisation <span class="muted" aria-hidden>*</span></label>
+            <input id="issuingOrg" name="issuingOrg" type="text" required autocomplete="off" />
+            <div class="error" id="errOrg" style="display:none">Please provide issuing organisation.</div>
+          </div>
+
+          <div class="field">
+            <label for="issueMonth">Issue date <span class="muted" aria-hidden>*</span></label>
+            <select id="issueMonth" name="issueMonth" required>
+              <option value="">Select month</option>
+              <option>January</option><option>February</option><option>March</option><option>April</option>
+              <option>May</option><option>June</option><option>July</option><option>August</option>
+              <option>September</option><option>October</option><option>November</option><option>December</option>
+            </select>
+            <div class="error" id="errMonth" style="display:none">Select month</div>
+          </div>
+
+          <div class="field">
+            <label for="issueYear">Issue year <span class="muted" aria-hidden>*</span></label>
+            <select id="issueYear" name="issueYear" required>
+              <option value="">Select year</option>
+              <!-- generate years -->
+            </select>
+            <div class="error" id="errYear" style="display:none">Select year</div>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label class="checkbox-row"><input type="checkbox" id="hasExpiry" /> This certificate has an expiry</label>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label for="certId">Certificate/License ID <span class="muted" aria-hidden>*</span></label>
+            <input id="certId" name="certId" type="text" required>
+            <div class="error" id="errId" style="display:none">Provide certificate ID</div>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label>Upload or add a link to your certificate/license</label>
+            <div class="uploader" id="dropZone" tabindex="0" aria-label="Drop files here">
+              <div class="uploader-inner">
+                <div style="font-size:20px">📁</div>
+                <div style="font-weight:700;margin-top:8px">Upload certificate/license copy</div>
+                <div class="hint">JPEG, PNG, or PDF. Max size: 50MB</div>
+
+                <div style="margin-top:12px">
+                  <input id="fileInput" type="file" accept=".png,.jpg,.jpeg,.pdf" style="display:none" />
+                  <button type="button" class="btn small" id="chooseFileBtn">Choose file</button>
+                </div>
+
+                <div style="margin-top:10px;">OR</div>
+
+                <div style="display:flex;gap:8px;margin-top:10px;justify-content:center">
+                  <input id="certUrl" type="url" placeholder="Enter Certificate/Licence URL" style="flex:1;border-radius:8px;padding:8px 10px" />
+                  <button type="button" class="btn small" id="addUrlBtn">Add</button>
+                </div>
+
+                <div class="file-preview" id="filePreview" style="display:none"></div>
+                <div class="error" id="errFile" style="display:none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="muted-sm">Attach one file or provide a URL.</div>
+          <div class="actions">
+            <button type="button" class="btn" id="modalCancel">Cancel</button>
+            <button type="submit" class="btn primary" id="modalAdd">Add certificate/license</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+      <!-- Preview / Right column -->
+      <aside class="preview">
+        <div class="card preview-card">
+          <div class="avatar-lg" id="previewAvatar">KS</div>
+          <div style="font-weight:800" id="previewNameSmall">Khushi Shukla</div>
+          <div class="muted-sm" id="previewSubtitle">Your customer dashboard is customised as per your brand color</div>
+
+          <div style="width:100%;display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <div style="display:flex;gap:10px">
+              <button class="btn ghost" style="flex:1">Discover</button>
+              <button class="btn primary" style="flex:1">Purchases</button>
+            </div>
+
+            <div style="background:#fff;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.03);">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="muted">Preview of your store</div>
+                <div class="muted-sm">Live</div>
+              </div>
+              <div style="height:8px"></div>
+              <div
+                style="height:8px;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-600))">
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite">Saved</div>
+  </div>
+
+  <script>
+    // Helper: show toast
+    function showToast(msg = 'Saved', time = 2200) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._t);
+      t._t = setTimeout(() => t.classList.remove('show'), time);
+    }
+
+    /* -------------------------
+       Copy profile URL
+       ------------------------- */
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const handle = document.getElementById('profileHandle').textContent.trim();
+      const url = `https://superprofile.bio/${handle}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('Profile URL copied');
+      } catch (e) {
+        showToast('Could not copy — please copy manually');
+      }
+    });
+
+    /* -------------------------
+       Inline handle edit
+       ------------------------- */
+    const editBtn = document.getElementById('editHandleBtn');
+    const handleEditor = document.getElementById('handleEditor');
+    const handleInput = document.getElementById('handleInput');
+    const storeHandleDisplay = document.getElementById('storeHandleDisplay');
+    const profileHandle = document.getElementById('profileHandle');
+    const metaPreviewUrl = document.getElementById('metaPreviewUrl');
+
+    editBtn.addEventListener('click', () => {
+      handleEditor.style.display = 'flex';
+      handleInput.focus();
+    });
+    document.getElementById('cancelHandleBtn').addEventListener('click', () => {
+      handleEditor.style.display = 'none';
+      handleInput.value = storeHandleDisplay.textContent;
+    });
+
+    function validHandle(val) {
+      return /^[A-Za-z0-9_\-]{3,30}$/.test(val);
+    }
+
+    document.getElementById('saveHandleBtn').addEventListener('click', () => {
+      const val = handleInput.value.trim();
+      if (!validHandle(val)) {
+        alert('Handle invalid. Only letters, numbers, hyphen, underscore. 3–30 chars.');
+        handleInput.focus();
+        return;
+      }
+      storeHandleDisplay.textContent = val;
+      profileHandle.textContent = val;
+      metaPreviewUrl.textContent = 'superprofile.bio/' + val;
+      // hide editor
+      handleEditor.style.display = 'none';
+      showToast('Store handle updated');
+    });
+
+    /* -------------------------
+       Color picker + preview
+       ------------------------- */
+    const colorPicker = document.getElementById('colorPicker');
+    const colorHex = document.getElementById('colorHex');
+    const colorSwatch = document.getElementById('colorSwatch');
+    const previewCard = document.getElementById('previewCard');
+    const previewAvatar = document.getElementById('previewAvatar');
+
+    function applyColor(hex) {
+      colorSwatch.style.background = hex;
+      colorHex.value = hex;
+      // subtle preview: apply shadow color and accent background bar in preview card
+      previewCard.style.boxShadow = `0 8px 18px ${hexToRgba(hex, 0.06)}`;
+      // Also update the small accent bar and button colors
+      document.querySelectorAll('.btn.primary').forEach(b => {
+        b.style.background = `linear-gradient(180deg, ${hex}, ${shade(hex, -10)})`;
+        b.style.border = 'none';
+      });
+      // update avatar shadow
+      previewAvatar.style.boxShadow = `0 8px 18px ${hexToRgba(hex, 0.06)}`;
+    }
+
+    colorPicker.addEventListener('input', (e) => {
+      applyColor(e.target.value);
+    });
+
+    document.getElementById('applyColor').addEventListener('click', () => {
+      applyColor(colorHex.value.startsWith('#') ? colorHex.value : '#' + colorHex.value);
+      showToast('Brand color applied');
+    });
+
+    document.getElementById('resetColor').addEventListener('click', () => {
+      colorPicker.value = '#6CA3F6';
+      applyColor('#6CA3F6');
+      showToast('Reset to default color');
+    });
+
+    colorHex.addEventListener('change', (e) => {
+      const val = e.target.value.trim();
+      const hex = val.startsWith('#') ? val : '#' + val;
+      if (/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
+        colorPicker.value = hex;
+        applyColor(hex);
+      } else {
+        alert('Enter 6-digit hex like #6CA3F6 or 6CA3F6');
+        colorHex.value = colorPicker.value;
+      }
+    });
+
+    // small color helpers
+    function hexToRgba(hex, alpha = 1) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    function shade(hex, percent) {
+      const h = hex.replace('#', '');
+      const num = parseInt(h, 16);
+      let r = (num >> 16) + Math.round(2.55 * percent);
+      let g = (num >> 8 & 0x00FF) + Math.round(2.55 * percent);
+      let b = (num & 0x0000FF) + Math.round(2.55 * percent);
+      r = Math.max(0, Math.min(255, r));
+      g = Math.max(0, Math.min(255, g));
+      b = Math.max(0, Math.min(255, b));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    /* -------------------------
+       SEO save
+       ------------------------- */
+    document.getElementById('seoSave').addEventListener('click', () => {
+      const title = document.getElementById('metaTitle').value.trim();
+      const desc = document.getElementById('metaDescription').value.trim();
+      // update preview
+      document.getElementById('metaPreviewTitle').textContent = title || '—';
+      showToast('SEO saved');
+    });
+    document.getElementById('seoReset').addEventListener('click', () => {
+      document.getElementById('metaTitle').value = 'Khushi Shukla';
+      document.getElementById('metaDescription').value = 'Welcome to my SuperProfile!🚀';
+      document.getElementById('metaPreviewTitle').textContent = 'Khushi Shukla';
+      showToast('SEO reset');
+    });
+
+    /* -------------------------
+       Sensitive switch
+       ------------------------- */
+    const sensitiveToggle = document.getElementById('sensitiveToggle');
+    sensitiveToggle.addEventListener('click', () => {
+      const pressed = sensitiveToggle.getAttribute('aria-pressed') === 'true';
+      sensitiveToggle.setAttribute('aria-pressed', String(!pressed));
+      showToast(!pressed ? 'Sensitive warning enabled' : 'Sensitive warning disabled');
+    });
+
+    /* -------------------------
+       Analytics Save / Reset
+       ------------------------- */
+    document.getElementById('analyticsSave').addEventListener('click', () => {
+      showToast('Analytics settings saved');
+    });
+    document.getElementById('analyticsReset').addEventListener('click', () => {
+      document.getElementById('fbPixel').value = '';
+      document.getElementById('fbToken').value = '';
+      document.getElementById('gaId').value = '';
+      showToast('Analytics reset');
+    });
+
+    /* -------------------------
+       Add cert
+       ------------------------- */
+    document.getElementById('addCertBtn').addEventListener('click', () => {
+      alert('Add certificate (file upload) — implement server upload and preview as needed.');
+    });
+
+    /* -------------------------
+       initial apply color
+       ------------------------- */
+    applyColor('#6CA3F6');
+
+    /* -------------------------
+       accessibility: keyboard handlers
+       ------------------------- */
+    document.querySelectorAll('.btn').forEach(b => {
+      b.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); } });
+    });
+
+    // Modal + Form logic
+    (function () {
+      const openBtn = document.getElementById('openAddBtn');
+      const overlay = document.getElementById('modalOverlay');
+      const closeBtn = document.getElementById('modalClose');
+      const cancelBtn = document.getElementById('modalCancel');
+      const form = document.getElementById('certForm');
+      const fileInput = document.getElementById('fileInput');
+      const chooseFileBtn = document.getElementById('chooseFileBtn');
+      const dropZone = document.getElementById('dropZone');
+      const filePreview = document.getElementById('filePreview');
+      const errFile = document.getElementById('errFile');
+      const addUrlBtn = document.getElementById('addUrlBtn');
+      const certUrl = document.getElementById('certUrl');
+      const certList = document.getElementById('certList');
+
+      const errTitle = document.getElementById('errTitle');
+      const errOrg = document.getElementById('errOrg');
+      const errMonth = document.getElementById('errMonth');
+      const errYear = document.getElementById('errYear');
+      const errId = document.getElementById('errId');
+
+      // fill years select
+      (function () {
+        const yearSelect = document.getElementById('issueYear');
+        const thisYear = new Date().getFullYear();
+        for (let y = thisYear; y >= 1980; y--) {
+          const opt = document.createElement('option'); opt.value = y; opt.textContent = y; yearSelect.appendChild(opt);
+        }
+      })();
+
+      let attached = { file: null, url: '' };
+
+      function openModal() {
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden', 'false');
+        // set focus
+        document.getElementById('certTitle').focus();
+        trapFocus(overlay);
+      }
+      function closeModal() {
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+        releaseFocusTrap();
+        clearForm();
+        openBtn.focus();
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      // keyboard: Esc to close when modal open
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('show')) {
+          e.preventDefault();
+          closeModal();
+        }
+      });
+
+      // choose file button
+      chooseFileBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (ev) => {
+        const f = ev.target.files[0];
+        handleFile(f);
+      });
+
+      // drag & drop
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const f = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) handleFile(f);
+      });
+
+      // add URL
+      addUrlBtn.addEventListener('click', () => {
+        const url = certUrl.value.trim();
+        if (!url) {
+          errFile.textContent = 'Enter a valid URL or upload a file.';
+          errFile.style.display = 'block';
+          return;
+        }
+        attached = { file: null, url };
+        renderPreview();
+        errFile.style.display = 'none';
+      });
+
+      // handle file attachment
+      function handleFile(file) {
+        if (!file) return;
+        const allowed = ['image/png', 'image/jpeg', 'application/pdf'];
+        if (!allowed.includes(file.type)) {
+          errFile.textContent = 'Unsupported file type. Use PNG, JPG or PDF.';
+          errFile.style.display = 'block';
+          return;
+        }
+        const maxBytes = 50 * 1024 * 1024; // 50MB
+        if (file.size > maxBytes) {
+          errFile.textContent = 'File too large. Max 50 MB.';
+          errFile.style.display = 'block';
+          return;
+        }
+        attached.file = file;
+        attached.url = '';
+        fileInput.files = createFileList(file);
+        renderPreview();
+        errFile.style.display = 'none';
+      }
+
+      function createFileList(file) {
+        // create a new FileList-like object for input (not widely supported to set, but we set for preview)
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        return dataTransfer.files;
+      }
+
+      function renderPreview() {
+        filePreview.innerHTML = '';
+        filePreview.style.display = 'flex';
+        if (attached.file) {
+          const f = attached.file;
+          if (f.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.alt = f.name;
+            img.src = URL.createObjectURL(f);
+            filePreview.appendChild(img);
+            const meta = document.createElement('div'); meta.className = 'meta'; meta.innerHTML = `<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="muted-sm">${(f.size / 1024 | 0)} KB</div>`;
+            filePreview.appendChild(meta);
+          } else {
+            // pdf
+            const icon = document.createElement('div'); icon.textContent = 'PDF'; icon.style.fontWeight = '700'; icon.style.padding = '8px 12px'; icon.style.borderRadius = '8px'; icon.style.background = '#fff'; icon.style.border = '1px solid rgba(0,0,0,0.04)';
+            filePreview.appendChild(icon);
+            const meta = document.createElement('div'); meta.className = 'meta'; meta.innerHTML = `<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="muted-sm">${(f.size / 1024 | 0)} KB</div>`;
+            filePreview.appendChild(meta);
+          }
+        } else if (attached.url) {
+          const meta = document.createElement('div'); meta.className = 'meta'; meta.innerHTML = `<div style="font-weight:700">Link added</div><div class="muted-sm">${escapeHtml(attached.url)}</div>`;
+          filePreview.appendChild(meta);
+        } else {
+          filePreview.style.display = 'none';
+        }
+      }
+
+      function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+
+      // form validation & submit
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // hide errors
+        [errTitle, errOrg, errMonth, errYear, errId, errFile].forEach(x => x.style.display = 'none');
+
+        const title = document.getElementById('certTitle').value.trim();
+        const org = document.getElementById('issuingOrg').value.trim();
+        const month = document.getElementById('issueMonth').value;
+        const year = document.getElementById('issueYear').value;
+        const id = document.getElementById('certId').value.trim();
+
+        let ok = true;
+        if (!title) { errTitle.style.display = 'block'; ok = false; }
+        if (!org) { errOrg.style.display = 'block'; ok = false; }
+        if (!month) { errMonth.style.display = 'block'; ok = false; }
+        if (!year) { errYear.style.display = 'block'; ok = false; }
+        if (!id) { errId.style.display = 'block'; ok = false; }
+        if (!attached.file && !attached.url) { errFile.textContent = 'Attach a file or add a URL.'; errFile.style.display = 'block'; ok = false; }
+
+        if (!ok) { return; }
+
+        // everything valid: add to list
+        const row = buildCertRow({ title, org, month, year, id, file: attached.file, url: attached.url });
+        certList.prepend(row); // newest on top
+        closeModal();
+      });
+
+      function buildCertRow(data) {
+        const wrap = document.createElement('div'); wrap.className = 'cert-row';
+        const left = document.createElement('div'); left.className = 'cert-left';
+        const icon = document.createElement('div'); icon.className = 'cert-icon';
+        if (data.file) {
+          const t = data.file.type;
+          icon.textContent = t === 'application/pdf' ? 'PDF' : 'IMG';
+        } else if (data.url) {
+          icon.textContent = 'LINK';
+        } else { icon.textContent = 'DOC' }
+        const meta = document.createElement('div'); meta.className = 'cert-meta';
+        const title = document.createElement('div'); title.style.fontWeight = '700'; title.textContent = data.title;
+        const sub = document.createElement('div'); sub.className = 'muted-sm'; sub.textContent = `${data.org} • ${data.month} ${data.year} • ID: ${data.id}`;
+        meta.appendChild(title); meta.appendChild(sub);
+        left.appendChild(icon); left.appendChild(meta);
+
+        const actions = document.createElement('div'); actions.className = 'cert-actions';
+        const viewBtn = document.createElement('button'); viewBtn.className = 'btn small'; viewBtn.type = 'button'; viewBtn.textContent = 'View';
+        viewBtn.addEventListener('click', () => {
+          // If file, open blob, if url open url
+          if (data.file) {
+            if (data.file.type.startsWith('image/')) {
+              const w = window.open('');
+              const img = w.document.createElement('img');
+              img.src = URL.createObjectURL(data.file);
+              img.style.maxWidth = '100%';
+              w.document.body.style.margin = '0';
+              w.document.body.appendChild(img);
+            } else {
+              // pdf
+              const blobUrl = URL.createObjectURL(data.file);
+              window.open(blobUrl, '_blank');
+            }
+          } else if (data.url) {
+            window.open(data.url, '_blank');
+          } else {
+            alert('No preview available.');
+          }
+        });
+
+        const removeBtn = document.createElement('button'); removeBtn.className = 'btn small'; removeBtn.type = 'button'; removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          if (confirm('Remove this certificate?')) wrap.remove();
+        });
+
+        actions.appendChild(viewBtn); actions.appendChild(removeBtn);
+
+        wrap.appendChild(left); wrap.appendChild(actions);
+        return wrap;
+      }
+
+      function clearForm() {
+        form.reset();
+        attached = { file: null, url: '' };
+        filePreview.innerHTML = '';
+        filePreview.style.display = 'none';
+        errFile.style.display = 'none';
+        [errTitle, errOrg, errMonth, errYear, errId].forEach(x => x.style.display = 'none');
+      }
+
+      // focus trap
+      let lastFocused = null;
+      let focusable = [];
+      let trapHandler = null;
+      function trapFocus(container) {
+        lastFocused = document.activeElement;
+        focusable = Array.from(container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'))
+          .filter(el => el.offsetParent !== null);
+        if (focusable.length) focusable[0].focus();
+        trapHandler = (e) => {
+          if (e.key === 'Tab') {
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault(); last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault(); first.focus();
+            }
+          }
+        };
+        document.addEventListener('keydown', trapHandler);
+      }
+      function releaseFocusTrap() {
+        if (trapHandler) document.removeEventListener('keydown', trapHandler);
+        if (lastFocused) lastFocused.focus();
+      }
+
+      // small helpers: click overlay to close (but only outside modal)
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+
+    })();
+
+    // show initial toast example (comment out if not wanted)
+    // showToast('Welcome — UI ready', 1600);
+  </script>
+</body>
+
+</html>
